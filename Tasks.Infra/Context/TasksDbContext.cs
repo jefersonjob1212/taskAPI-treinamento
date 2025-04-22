@@ -4,14 +4,9 @@ using Tasks.Infra.Tasks.Configurations;
 
 namespace Tasks.Infra.Context;
 
-public class TasksDbContext : DbContext
+public class TasksDbContext(DbContextOptions<TasksDbContext> options) : DbContext(options)
 {
     public DbSet<TaskEntity> TaskEntities { get; set; }
-
-    public TasksDbContext(DbContextOptions<TasksDbContext> options)
-        : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

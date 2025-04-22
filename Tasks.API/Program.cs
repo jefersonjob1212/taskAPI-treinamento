@@ -22,7 +22,7 @@ builder.Services.Configure<JsonOptions>(options =>
 
 builder.Services.AddDbContext<TasksDbContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("TaskDB"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("TaskDB"), b => b.MigrationsAssembly("Tasks.Infra"));
 });
 
 builder.Services.AddScoped<ITasksAppServico, TasksAppService>();
