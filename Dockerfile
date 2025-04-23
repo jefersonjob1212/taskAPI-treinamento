@@ -23,6 +23,3 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Tasks.API.dll"]
-
-EXPOSE 5000
-EXPOSE 5001
