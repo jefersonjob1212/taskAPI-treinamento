@@ -1,6 +1,22 @@
 ﻿services:
-  webapplication1:
-    image: webapplication1
-    build:
-      context: .
-      dockerfile: WebApplication1/Dockerfile
+  task_api:
+    image: task-api
+    build: .
+    ports:
+      - 5000:5000
+      - 5001:5001
+    depends_on:
+      - "db"
+  
+  db:
+    image: postgres
+    container_name: taskapi-db
+    ports:
+      - 5433:5433
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    
+volumes:
+  postgres_data:
