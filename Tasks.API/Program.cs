@@ -25,17 +25,25 @@ builder.Services.AddDbContext<TasksDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("TaskDB"), b => b.MigrationsAssembly("Tasks.Infra"));
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "CorsPolicy", builder =>
+    {
+        builder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 builder.Services.AddScoped<ITasksAppServico, TasksAppService>();
 builder.Services.AddScoped<ITasksRespository, TasksRepository>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-//{
+app.UseCors("CorsPolicy");
+
 app.UseSwagger();
 app.UseSwaggerUI();
-//}
 
 app.UseHttpsRedirection();
 
@@ -46,24 +54,4 @@ var summaries = new[]
 
 TasksController.Map(app);
 
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
-
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

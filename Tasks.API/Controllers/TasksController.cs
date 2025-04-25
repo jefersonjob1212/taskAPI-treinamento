@@ -15,7 +15,8 @@ public class TasksController
             ITasksAppServico tasksAppServico) =>
         {
             var request = new TaskListRequest(description, page, pageSize);
-            return await tasksAppServico.GetAsync(request);
+            var result = await tasksAppServico.GetAsync(request); 
+            return result;
         });
 
         app.MapGet("api/v1/tasks/{id}", async (int id, ITasksAppServico tasksAppServico) =>
